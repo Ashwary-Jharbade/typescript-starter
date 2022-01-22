@@ -10,7 +10,7 @@
     "prettier-format": "prettier --config .prettierrc --write src/**/*.ts",
     "format:eslint": "eslint --fix",
     "format:prettier": "prettier --write src",
-    "format": "npm run format:eslint && npm run prettier-format",
+    "format": "npm run format:eslint && npm run format:prettier",
     "build": "rimraf ./build && tsc --watch",
     "start": "nodemon build/index.js",
     "prepare": "husky install"
