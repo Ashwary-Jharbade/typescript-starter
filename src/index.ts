@@ -1,3 +1,4 @@
-console.log('Hello world!');
+import sum from './test/index';
+sum(1, 1);
 const x = 1;
-console.log(x);
+x + x;

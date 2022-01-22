@@ -1,2 +1,3 @@
 "use strict";
-console.log("Hello world!");
+const x = 1;
+x + x;
