@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "format:eslint": "eslint --fix",
+    "format:prettier": "prettier --write src",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
     "prettier-format": "prettier --config .prettierrc --write src/**/*.ts",
-    "format:eslint": "eslint --fix",
-    "format:prettier": "prettier --write src",
-    "format": "npm run format:eslint && npm run format:prettier",
+    "format": "npm run lint-and-fix && npm run prettier-format",
     "build": "rimraf ./build && tsc --watch",
     "start": "nodemon build/index.js",
     "prepare": "husky install"
