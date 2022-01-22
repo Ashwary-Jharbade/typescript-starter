@@ -5,18 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon",
-    "build:rimraf": "rimraf ./build && tsc",
-    "start:build": "npm run build && node build/index.js",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
+    "prettier-format": "prettier --config .prettierrc --write src/**/*.ts",
     "format:eslint": "eslint --fix",
     "format:prettier": "prettier --write src",
-    "format": "npm run format:eslint && npm run format:prettier",
-    "build": "tsc --watch",
-    "start": "nodemon dist/index.js",
+    "format": "npm run format:eslint && npm run prettier-format",
+    "build": "rimraf ./build && tsc --watch",
+    "start": "nodemon build/index.js",
     "prepare": "husky install"
   },
   "lint-staged": {
