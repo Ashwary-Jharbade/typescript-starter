@@ -1,9 +1,10 @@
 {
+  "stage": "Development",
   "express": {
     "port": 3000
   },
   "db" : {
-      "db_name": "",
-      "db_path": ""
+      "db_name": "netflixDev",
+      "db_path": "mongodb://localhost:27017/"
   }
 }

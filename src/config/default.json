@@ -1,9 +1,10 @@
 {
-    "express": {
-      "port": 8000
-    },
-    "db" : {
-        "db_name": "",
-        "db_path": ""
-    }
+  "stage": "Default",
+  "express": {
+    "port": 8000
+  },
+  "db": {
+      "db_name": "netflixDefault",
+      "db_path": "mongodb://localhost:27017/"
+  }
 }
