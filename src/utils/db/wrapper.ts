@@ -14,12 +14,12 @@ const save = (model: any, data: any) => {
   return createRecord(model, data);
 };
 
-const find = (model: any, query: any) => {
-  return findRecord(model, query);
+const find = (model: any, query: any, properties: any) => {
+  return findRecord(model, query, properties);
 };
 
-const findAll = (model: any, query: any) => {
-  return findAllRecord(model, query);
+const findAll = (model: any, query: any, properties: any) => {
+  return findAllRecord(model, query, properties);
 };
 
 const update = (model: any, query: any, data: any) => {

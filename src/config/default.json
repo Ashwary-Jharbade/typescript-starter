@@ -6,5 +6,9 @@
   "db": {
       "db_name": "netflixDefault",
       "db_path": "mongodb://localhost:27017/"
+  },
+  "auth": {
+    "key": "sakjbka51sadfv651cas16as5c6as5vas",
+    "expires": 20
   }
 }

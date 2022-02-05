@@ -5,13 +5,13 @@ const createRecord = async (model: any, payload: any) => {
   return data;
 };
 
-const findRecord = async (model: any, query = {}) => {
-  const data = await model.findOne(query);
+const findRecord = async (model: any, query = {}, properties = {}) => {
+  const data = await model.findOne(query, properties);
   return data;
 };
 
-const findAllRecord = async (model: any, query = {}) => {
-  const data = await model.find(query);
+const findAllRecord = async (model: any, query = {}, properties = {}) => {
+  const data = await model.find(query, properties);
   return data;
 };
 

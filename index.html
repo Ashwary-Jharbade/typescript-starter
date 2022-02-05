@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .video-frame {
+        box-shadow: 0px 0px 20px 1px rgba(244, 6, 18, 0.5);
+      }
+      .video-controls {
+        height: 40px;
+        width: 300px;
+        outline: none;
+        font-size: 18px;
+      }
+      .btn-styles {
+        background-color: #f40612;
+        color: white;
+        width: 150px;
+        border: none;
+        font-size: 15px;
+        height: 45px;
+      }
+    </style>
+  </head>
+  <body bgcolor="#00000">
+    <br /><br />
+    <div style="display: flex; justify-content: center">
+      <div>
+        <video
+          class="video-frame"
+          width="100%"
+          height="450"
+          controls
+          autoplay
+          crossorigin="anonymous"
+          id="videoFrame"
+          src=""
+        ></video>
+      </div>
+    </div>
+    <br /><br />
+    <div style="display: flex; justify-content: center">
+      <div>
+        <input
+          class="video-controls"
+          type="text"
+          id="mediaId"
+          value="61fb83db41cbf65aabace78e"
+        />
+        <button class="video-controls btn-styles" onclick="streamVideo()">
+          Stream Video
+        </button>
+      </div>
+    </div>
+  </body>
+  <script>
+    function streamVideo() {
+      const mediaInput = document.getElementById('mediaId').value;
+      const videoFrame = document.getElementById('videoFrame');
+      if (mediaInput) {
+        videoFrame.src = `http://localhost:3000/content/stream/${mediaInput}`;
+      } else {
+        videoFrame.src = '';
+      }
+    }
+  </script>
+</html>
