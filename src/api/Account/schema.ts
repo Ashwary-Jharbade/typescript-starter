@@ -13,6 +13,14 @@ const accountSchema = new Mongoose.Schema(
       required: true,
       enum: ['root', 'staff', 'user']
     },
+    accessId: {
+      type: String,
+      default: crypto
+        .createHash('sha256')
+        .update(`${uuidv4()}${new Date().getTime()}`)
+        .digest('hex'),
+      unique: true
+    },
     privileges: [
       {
         privilegeId: {
@@ -77,37 +85,10 @@ const accountSchema = new Mongoose.Schema(
     },
     activeSessionDevices: [
       {
-        activeSessionDeviceId: {
-          type: String,
-          required: true,
-          unique: true
-        },
-        deviceType: {
+        device: {
           type: String,
           required: true,
           enum: ['mobile', 'tablet', 'laptop', 'tv']
-        },
-        isSessionActive: {
-          type: Boolean,
-          required: true,
-          default: true
-        },
-        isActive: {
-          type: Boolean,
-          required: false,
-          default: true
-        },
-        lastLogin: {
-          type: Date,
-          required: true
-        },
-        createdAt: {
-          type: Date,
-          required: true
-        },
-        updatedAt: {
-          type: Date,
-          required: true
         }
       }
     ],

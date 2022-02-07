@@ -12,18 +12,26 @@ const createToken = (payload: any): string => {
   }
 };
 
-const validateToken = (token: string): any => {
+const validateToken = (token: string): boolean => {
   try {
     jwt.verify(token, config.AUTH_KEY, (err: any) => {
       if (err) {
-        return false;
+        throw err;
       }
     });
-    const data = jwt.decode(token);
-    return data;
+    return true;
   } catch (error) {
     return false;
   }
 };
 
-export { createToken, validateToken };
+const decodeToken = (token: string): any => {
+  try {
+    const data = jwt.decode(token);
+    return data;
+  } catch (error) {
+    return null;
+  }
+};
+
+export { createToken, validateToken, decodeToken };

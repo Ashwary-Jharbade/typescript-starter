@@ -9,6 +9,6 @@
   },
   "auth": {
       "key": "sakjbka51sadfv651cas16as5c6as5vas",
-      "expires": 100000
+      "expires": 3600
   }
 }

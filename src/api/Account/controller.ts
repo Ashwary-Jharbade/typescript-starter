@@ -6,8 +6,19 @@ import { apiResponse, httpConstants } from '../../utils/resuables';
 const createAccount = async (req: Request, res: Response) => {
   try {
     const body = req.body;
+    const role = 'root';
+    let code = httpConstants.created;
+    if (body.role === role) {
+      const query = { role: role, group: role, isActive: true };
+      const account = await find(AccountModel, query, {});
+      if (account) {
+        code = httpConstants.bad_request;
+        return res
+          .status(code)
+          .json(apiResponse(code, 'Root account already exists'));
+      }
+    }
     const data = await save(AccountModel, body);
-    const code = httpConstants.created;
     return res
       .status(code)
       .json(apiResponse(code, 'Account created successfully', data));

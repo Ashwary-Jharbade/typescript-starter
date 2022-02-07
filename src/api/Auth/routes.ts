@@ -4,6 +4,6 @@ import { signin, signout } from './auth';
 const authRouter = Express.Router();
 
 authRouter.post('/login', signin);
-authRouter.get('/logout', signout);
+authRouter.post('/logout', signout);
 
 export default authRouter;

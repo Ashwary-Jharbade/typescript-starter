@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+      * {
+        font-family: 'Roboto', sans-serif;
+      }
       .video-frame {
         box-shadow: 0px 0px 20px 1px rgba(244, 6, 18, 0.5);
       }
@@ -22,49 +26,319 @@
         border: none;
         font-size: 15px;
         height: 45px;
+        cursor: pointer;
+      }
+      .login-panel {
+        width: 300px;
+        margin: 10px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 50px;
+        box-shadow: 0px 0px 20px 1px rgba(244, 6, 18, 0.5);
+      }
+      .login-panel label {
+        color: white;
+        display: block;
+        margin-bottom: 5px;
+      }
+      .login-panel input {
+        height: 45px;
+        outline: none;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0 0 10px 0;
+        font-size: 18px;
+      }
+      .btn-login {
+        margin: 10px 0;
+      }
+      #error {
+        color: red;
+        font: 14px;
+      }
+      .flex-center {
+        display: flex;
+        justify-content: center;
+      }
+      .video-panel-screen {
+        flex: 7;
+      }
+      .video-panel-list {
+        flex: 3;
+      }
+      .list-wrapper {
+        /* height: 40px; */
+        background-color: rgba(244, 6, 18, 0.6);
+        margin: 5px;
+        padding: 10px;
+        color: white;
+        cursor: pointer;
+      }
+      @media screen and (max-width: 1024px) {
+        .video-panel-screen {
+          flex: 1;
+        }
+        .video-panel-list {
+          flex: 1;
+        }
+        .video-panel {
+          flex-direction: column-reverse;
+        }
+      }
+      @media screen and (max-width: 350px) {
+        .login-panel {
+          width: 100%;
+        }
       }
     </style>
   </head>
   <body bgcolor="#00000">
-    <br /><br />
-    <div style="display: flex; justify-content: center">
+    <div class="login-panel" id="login-panel">
       <div>
-        <video
-          class="video-frame"
-          width="100%"
-          height="450"
-          controls
-          autoplay
-          crossorigin="anonymous"
-          id="videoFrame"
-          src=""
-        ></video>
+        <label for="username">Username</label>
+        <input
+          oninput="unsetError()"
+          type="text"
+          id="email"
+          name="username"
+          value="test@gmail.com"
+        />
+      </div>
+      <div>
+        <label for="username">Password</label>
+        <input
+          oninput="unsetError()"
+          type="password"
+          id="password"
+          name="password"
+          value="123"
+        />
+      </div>
+      <div>
+        <button class="btn-styles btn-login" onclick="login()">Login</button>
+        <div>
+          <span id="error"></span>
+        </div>
       </div>
     </div>
-    <br /><br />
-    <div style="display: flex; justify-content: center">
-      <div>
-        <input
-          class="video-controls"
-          type="text"
-          id="mediaId"
-          value="61fb83db41cbf65aabace78e"
-        />
-        <button class="video-controls btn-styles" onclick="streamVideo()">
-          Stream Video
-        </button>
+    <div id="video-panel" class="flex-center video-panel">
+      <div class="video-panel-list">
+        <div id="media-list"></div>
+      </div>
+      <div class="video-panel-screen">
+        <br /><br />
+        <div class="flex-center">
+          <div>
+            <video
+              class="video-frame"
+              width="100%"
+              height="450"
+              controls
+              autoplay
+              crossorigin="anonymous"
+              id="videoFrame"
+              src=""
+            ></video>
+          </div>
+        </div>
+        <br /><br />
+        <div class="flex-center">
+          <div>
+            <button class="video-controls btn-styles" onclick="logout()">
+              Logout
+            </button>
+            <br /><br />
+          </div>
+        </div>
       </div>
     </div>
   </body>
   <script>
-    function streamVideo() {
-      const mediaInput = document.getElementById('mediaId').value;
-      const videoFrame = document.getElementById('videoFrame');
-      if (mediaInput) {
-        videoFrame.src = `http://localhost:3000/content/stream/${mediaInput}`;
-      } else {
-        videoFrame.src = '';
+    const videoPanel = document.getElementById('video-panel');
+    const loginPanel = document.getElementById('login-panel');
+    const error = document.getElementById('error');
+    window.onload = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        loginPanel.style.display = 'none';
+        listMediaContent();
+        return;
       }
+      videoPanel.style.display = 'none';
+    };
+    navigator.connection.addEventListener('change', displayNetworkInfo);
+    function displayNetworkInfo() {
+      console.log(navigator.connection.effectiveType);
+      // var userImageLink =
+      //   'https://media.geeksforgeeks.org/wp-content/cdn-uploads/20200714180638/CIP_Launch-banner.png';
+      // var time_start, end_time;
+      // // The size in bytes
+      // var downloadSize = 5616998;
+      // var downloadImgSrc = new Image();
+      // downloadImgSrc.onload = function () {
+      //   end_time = new Date().getTime();
+      //   displaySpeed();
+      // };
+      // time_start = new Date().getTime();
+      // downloadImgSrc.src = userImageLink;
+      // document.write('time start: ' + time_start);
+      // document.write('<br>');
+      // function displaySpeed() {
+      //   var timeDuration = (end_time - time_start) / 1000;
+      //   var loadedBits = downloadSize * 8;
+      //   /* Converts a number into string
+      //              using toFixed(2) rounding to 2 */
+      //   var bps = (loadedBits / timeDuration).toFixed(2);
+      //   var speedInKbps = (bps / 1024).toFixed(2);
+      //   var speedInMbps = (speedInKbps / 1024).toFixed(2);
+      //   alert(
+      //     'Your internet connection speed is: \n' +
+      //       bps +
+      //       ' bps\n' +
+      //       speedInKbps +
+      //       ' kbps\n' +
+      //       speedInMbps +
+      //       ' Mbps\n'
+      //   );
+      // }
+    }
+    function unsetError() {
+      error.innerHTML = '';
+    }
+    function logout() {
+      const accessId = localStorage.getItem('accessId');
+      const device = localStorage.getItem('device');
+      fetch('http://localhost:3000/user/logout/', {
+        method: 'POST',
+        body: JSON.stringify({
+          accessId,
+          device
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        }
+      })
+        .then((response) => response.json())
+        .then((res) => {
+          const {
+            meta: { status, message },
+            data
+          } = res;
+          if (status === 200) {
+            localStorage.setItem('accessId', '');
+            localStorage.setItem('device', '');
+            localStorage.setItem('token', '');
+            const videoFrame = document.getElementById('videoFrame');
+            videoFrame.setAttribute('src', '');
+            videoPanel.style.display = 'none';
+            loginPanel.style.display = 'block';
+            return;
+          }
+          alert(message);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    function calDeviceSize() {
+      const width = window.screen.width;
+      let device;
+      if (width > 1024 && width <= 1920) {
+        device = 'laptop';
+      } else if (width <= 1024 && width > 520) {
+        device = 'tablet';
+      } else if (width <= 520) {
+        device = 'mobile';
+      } else {
+        device = 'tv';
+      }
+      return device;
+    }
+    function prepareList(data) {
+      const { title, _id } = data;
+      const wrapper = document.createElement('div');
+      wrapper.classList = 'list-wrapper';
+      wrapper.innerHTML = data.title;
+      wrapper.dataset.path = _id;
+      wrapper.onclick = () => {
+        const videoFrame = document.getElementById('videoFrame');
+        const path = `http://localhost:3000/content/stream/${wrapper.dataset.path}`;
+        videoFrame.setAttribute('src', path);
+      };
+      return wrapper;
+    }
+    function populate(data) {
+      const listDOM = document.getElementById('media-list');
+      if (!data.length) {
+        listDOM.innerHTML = 'No content to display';
+        return;
+      }
+      data.forEach((item) => {
+        const { title, episodes } = item;
+        listDOM.append(prepareList(item.episodes[0]));
+      });
+    }
+    function listMediaContent() {
+      fetch('http://localhost:3000/content/findAll/')
+        .then((response) => response.json())
+        .then((res) => {
+          const {
+            meta: { status, message },
+            data
+          } = res;
+          if (status === 200) {
+            populate(data);
+            return;
+          }
+          populate([]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    function login() {
+      const device = calDeviceSize();
+      const emailObj = document.getElementById('email');
+      const passwordObj = document.getElementById('password');
+      const email = emailObj.value;
+      const password = passwordObj.value;
+      if (!device || !email || !password) {
+        error.innerHTML = 'Email or password incorrect';
+        return;
+      }
+      fetch('http://localhost:3000/user/login/', {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          password,
+          device
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        }
+      })
+        .then((response) => response.json())
+        .then((res) => {
+          const {
+            meta: { status, message },
+            data
+          } = res;
+          if (status === 200) {
+            const { token, accessId, device } = data[0];
+            localStorage.setItem('accessId', accessId);
+            localStorage.setItem('token', token);
+            localStorage.setItem('device', device);
+            loginPanel.style.display = 'none';
+            videoPanel.style.display = 'flex';
+            return;
+          }
+          error.innerHTML = message;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   </script>
 </html>
