@@ -15,6 +15,20 @@ const api = (app: Express) => {
   app.use('/content', contentRouter);
   app.use('/account', accountRouter);
 
+  app.post('/thumnails', (req: Request, res: Response) => {
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res
+        .status(httpConstants.not_found)
+        .send('No files were uploaded.');
+    }
+    const file: { content?: FileArray } = req.files;
+    const fileUploadResponse = localFileUpload(file.content, 'thumnails');
+    if (fileUploadResponse) {
+      return res.status(httpConstants.success).send(fileUploadResponse);
+    }
+    return res.status(httpConstants.not_found).send('No files were uploaded.');
+  });
+
   app.post('/upload', (req: Request, res: Response) => {
     if (!req.files || Object.keys(req.files).length === 0) {
       return res

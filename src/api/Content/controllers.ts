@@ -3,13 +3,38 @@ import { Request, Response } from 'express';
 import { apiResponse, httpConstants } from '../../utils/resuables';
 import { properties } from './accessProperties';
 import ContentModel from './schema';
-import { save, find, findAll } from '../../utils/db';
+import { save, find, findAll, push } from '../../utils/db';
 
 const createContent = async (req: Request, res: Response) => {
   try {
     const body = req.body;
     const contentInstance = body;
     const data = await save(ContentModel, contentInstance);
+    const code = httpConstants.created;
+    return res
+      .status(code)
+      .json(apiResponse(code, 'Content added successfully', data));
+  } catch (error) {
+    const code = httpConstants.not_found;
+    return res
+      .status(code)
+      .json(apiResponse(code, `Unable to add content: ${error}`, []));
+  }
+};
+
+const addContent = async (req: Request, res: Response) => {
+  try {
+    const { id, episodeId } = req.params;
+    const query = { _id: id, 'episodes._id': episodeId };
+    const body = req.body;
+    const { videoPath, quality } = body;
+    if (!videoPath && !quality) {
+      throw 'Unable to add content';
+    }
+    const payload = {
+      'episodes.$.video': { videoPath, quality }
+    };
+    const data = await push(ContentModel, query, payload);
     const code = httpConstants.created;
     return res
       .status(code)
@@ -91,5 +116,6 @@ export {
   createContent,
   streamContent,
   findSingleMediaContent,
-  findAllMediaContent
+  findAllMediaContent,
+  addContent
 };

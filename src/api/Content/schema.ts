@@ -230,10 +230,18 @@ const contentSchema = new Mongoose.Schema(
             }
           }
         ],
-        videoPath: {
-          type: String,
-          required: true
-        },
+        video: [
+          {
+            videoPath: {
+              type: String,
+              required: true
+            },
+            quality: {
+              type: String,
+              required: true
+            }
+          }
+        ],
         isActive: {
           type: Boolean,
           required: false,
