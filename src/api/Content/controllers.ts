@@ -4,7 +4,7 @@ import { apiResponse, httpConstants } from '../../utils/resuables';
 import { properties } from './accessProperties';
 import ContentModel from './schema';
 import { save, find, findAll, push } from '../../utils/db';
-import { Mongoose, ObjectId } from 'mongoose';
+import Mongoose from 'mongoose';
 
 const createContent = async (req: Request, res: Response) => {
   try {
@@ -51,19 +51,37 @@ const addContent = async (req: Request, res: Response) => {
 const streamContent = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const query = { 'episodes.video._id': id };
-    const data = await find(ContentModel, query, {});
-    const arr: any[] = [];
-    data?.episodes?.forEach((epi: any) => {
-      epi?.video?.forEach((item: any) => {
-        const { _id } = item;
-        if (_id.toString() === id) {
-          arr.push(item);
+    // const query = { 'episodes.video._id': id };
+    // const data = await find(ContentModel, query, {});
+    const data = await ContentModel.aggregate([
+      {
+        $facet: {
+          record: [
+            {
+              $match: {
+                'episodes.video._id': new Mongoose.Types.ObjectId(id)
+              }
+            }
+          ]
         }
-      });
-    });
-    const videoPath = arr[0].videoPath;
-    console.log(videoPath);
+      },
+      { $unwind: { path: '$record' } },
+      { $project: { record: '$record.episodes.video' } },
+      { $unwind: { path: '$record' } },
+      { $unwind: { path: '$record' } },
+      { $match: { 'record._id': new Mongoose.Types.ObjectId(id) } }
+    ]);
+    // const arr: any[] = [];
+    // data?.episodes?.forEach((epi: any) => {
+    //   epi?.video?.forEach((item: any) => {
+    //     const { _id } = item;
+    //     if (_id.toString() === id) {
+    //       arr.push(item);
+    //     }
+    //   });
+    // });
+    // const videoPath = arr[0].videoPath;
+    const videoPath = data[0].record.videoPath;
     const videoStat = fs.statSync(videoPath);
     const fileSize = videoStat.size;
     const videoRange = req.headers.range;
